@@ -1,6 +1,7 @@
 import React, {FC} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../redux/store";
+import {Link} from "react-router-dom";
 
 
 interface ProductListingProps {
@@ -17,7 +18,7 @@ const ProductListing: FC<ProductListingProps> = () => {
         <div data-testid="ProductListing">
             ProductListing Component
             {products && products.map((product) => {
-                return (<div key={product.id}>{product.name}</div>)
+                return (<div key={product.id}><Link to={'/products/' + product.id}>{product.name}</Link></div>)
             })}
         </div>
     );
