@@ -7,8 +7,8 @@ describe('<ProductListing />', () => {
   test('it should mount', () => {
     render(<ProductListing />);
 
-    const ProductListing = screen.getByTestId('ProductListing');
+    let productListing  = screen.getByTestId('ProductListing');
 
-    expect(ProductListing).toBeInTheDocument();
+    expect(productListing).toBeInTheDocument();
   });
 });

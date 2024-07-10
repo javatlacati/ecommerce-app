@@ -7,8 +7,8 @@ describe('<Cart />', () => {
   test('it should mount', () => {
     render(<Cart />);
 
-    const Cart = screen.getByTestId('Cart');
+    const cart = screen.getByTestId('Cart');
 
-    expect(Cart).toBeInTheDocument();
+    expect(cart).toBeInTheDocument();
   });
 });

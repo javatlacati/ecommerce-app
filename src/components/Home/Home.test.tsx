@@ -7,8 +7,8 @@ describe('<Home />', () => {
   test('it should mount', () => {
     render(<Home />);
 
-    const Home = screen.getByTestId('Home');
+    const home = screen.getByTestId('Home');
 
-    expect(Home).toBeInTheDocument();
+    expect(home).toBeInTheDocument();
   });
 });
