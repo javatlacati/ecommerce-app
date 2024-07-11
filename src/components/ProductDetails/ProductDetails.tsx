@@ -2,6 +2,7 @@ import React, {FC} from 'react';
 import {useParams} from "react-router-dom";
 import {useSelector} from "react-redux";
 import {RootState} from "../../redux/store";
+import {CleanButton} from "../AppStyle";
 
 interface ProductDetailsProps {
 }
@@ -17,10 +18,13 @@ const ProductDetails: FC<ProductDetailsProps> = () => {
             {product && product.name}
             <br/>
             {product && product.price}
-            <br />
+            <br/>
             {product && product.image}
-            <br />
-            <button onClick={() => {}}>Add to cart</button>
+            <br/>
+            <CleanButton onClick={() => {
+                alert('Product added to cart');
+            }}>Add to cart
+            </CleanButton>
         </div>
     );
 };

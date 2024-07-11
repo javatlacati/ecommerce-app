@@ -1,6 +1,7 @@
 import React, {FC} from 'react';
 import {useSelector} from "react-redux";
 import {RootState} from "../../redux/store";
+import {CleanButton} from "../AppStyle";
 
 interface CartProps {
 }
@@ -25,9 +26,9 @@ const Cart: FC<CartProps> = () => {
                         <br/>
                         {product && product.image}
                         <br/>
-                        <button onClick={() => {
+                        <CleanButton onClick={() => {
                         }}>Add to cart
-                        </button>
+                        </CleanButton>
                     </div>
                 );
             })}
