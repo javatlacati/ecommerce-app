@@ -1,48 +1,83 @@
 import {createSlice, PayloadAction, Slice, SliceSelectors} from "@reduxjs/toolkit";
-import {Map} from "immutable";
+
+export interface CartProduct {
+    productId: number;
+    productQuantity: number;
+    productPrice: number;
+}
 
 export interface CartSliceState {
     totalToBePaid: number;
-    items: Map<string, number> | null;
+    items: CartProduct[];
 }
 
-export const cartSlice: Slice<{ totalToBePaid: number; items: null }, {
-    addItem: (state: CartSliceState, action: { payload: any }) => void;
-    removeItem: (state: CartSliceState, action: { payload: any }) => void;
-    clearCart: (state: CartSliceState) => void
-}, string, string, SliceSelectors<{ totalToBePaid: number; items: null }>> = createSlice({
+let addItemFunction = (state: CartSliceState, action: {
+    payload: { productId: number, quantity: number, price: number }
+}) => {
+    const productId = action.payload.productId;
+    const quantity = action.payload.quantity || 1;
+    let price = action.payload.price;
+    let possibleItemIndex = state.items.findIndex((item) =>
+        item.productId === productId
+    );
+    if (possibleItemIndex !== -1) {
+        const possibleItem = state.items[possibleItemIndex];
+        const currentQuantity = possibleItem.productQuantity;
+        updateItemQuantityByIndexFunction(state, {
+            payload: {
+                productId,
+                newQuantity: currentQuantity + quantity,
+                price,
+                index: possibleItemIndex
+            }
+        });
+    } else {
+        state.items = [...state.items, {productId, productQuantity: quantity, productPrice: price}];
+        state.totalToBePaid += quantity * price;
+    }
+
+};
+let updateItemQuantityByIndexFunction = (state: CartSliceState, action: {
+    payload: {
+        productId: number,
+        newQuantity: number,
+        price: number,
+        index: number
+    }
+}) => {
+    const productId = action.payload.productId;
+    const newQuantity = action.payload.newQuantity;
+    const price = action.payload.price;
+    const index = action.payload.index;
+    const newProduct: CartProduct = {
+        productId,
+        productQuantity: newQuantity,
+        productPrice: price
+    }
+    state.items = state.items.map((item, i) => i === index ? newProduct : item);
+    state.totalToBePaid -= newQuantity * price;
+};
+
+export const cartSlice = createSlice({
     name: 'cart',
     initialState: {
-        items: null,
+        items: new Array<CartProduct>(),
         totalToBePaid: 0,
     },
     reducers: {
-        addItem: (state: CartSliceState, action: { payload: any }) => {
-            const productId = action.payload.productId;
-            const quantity = action.payload.quantity || 1;
-            if (state.items) {
-                const currentQuantity = state.items.get(productId);
-                if (currentQuantity != undefined) {
-                    state.items = state.items.set(productId, currentQuantity + quantity);
-                    state.totalToBePaid += quantity * action.payload.price;
-                }
-            } else {
-                state.items = Map({[productId]: quantity});
-                state.totalToBePaid += quantity * action.payload.price;
-            }
-        },
-        removeItem: (state: CartSliceState, action: { payload: any }) => {
-            const productId: number = action.payload;
-            if (state.items != null) {
-                const currentQuantity: number = state.items.get(`${productId}`) || 0;
-                if (currentQuantity > 0) {
-                    state.items.set(`${productId}`, currentQuantity - 1);
-                    state.totalToBePaid -= currentQuantity * action.payload.price;
-                }
+        addItem: addItemFunction,
+        updateItemQuantityByIndex: updateItemQuantityByIndexFunction,
+        removeItem: (state: CartSliceState, action: { payload: { productId: number, price: number } }) => {
+            let possibleItem = state.items.find((item) => {
+                item.productId === action.payload.productId
+            });
+            if (possibleItem) {
+                state.items = state.items.filter((item) => item.productId !== action.payload.productId);
+                state.totalToBePaid -= possibleItem.productQuantity * possibleItem.productPrice;
             }
         },
         clearCart: (state: CartSliceState) => {
-            state.items = null;
+            state.items = [];
             state.totalToBePaid = 0;
         },
     }

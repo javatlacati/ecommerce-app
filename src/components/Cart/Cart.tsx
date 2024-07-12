@@ -1,5 +1,5 @@
 import React, {FC} from 'react';
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../redux/store";
 import {CleanButton} from "../AppStyle";
 
@@ -13,11 +13,12 @@ const Cart: FC<CartProps> = () => {
     const cart = useSelector((state: RootState) => state.cart);
     const products = useSelector((state: RootState) => state.products);
     let [totalPrice, setTotalPrice] = React.useState(0);
+    const dispatch = useDispatch();
     return (
         <div data-testid="Cart">
             <h2>Selected products:</h2>
-            {cart && cart.items && Array.from((cart.items as Map<string, number>))?.map(([productId, quantity], index) => {
-                const product = products.find((p) => (p.id + "") === productId);
+            {cart && cart.items && cart.items.map((cartProduct, index) => {
+                const product = products.find((p) => p.id === cartProduct.productId);
                 return (
                     <div data-testid="ProductDetails" key={index}>
                         {product && product.name}
@@ -26,17 +27,20 @@ const Cart: FC<CartProps> = () => {
                         <br/>
                         {product && product.image && <img src={product.image} alt={product.description}/>}
                         <br/>
-                        {product && `Quantity: ${quantity}`}
+                        {product && `Quantity: ${cartProduct.productQuantity}`}
                         <br/>
                         <br/>
-                        <b>Total</b>: {cart.totalToBePaid}
+                        <b>Subtotal</b>: {cart.totalToBePaid}
                         <br/>
                         <CleanButton onClick={() => {
-                        }}>Add to cart
+                        }}>Quitar de la carta
                         </CleanButton>
                     </div>
                 );
             })}
+            <div>
+                Total: {totalPrice}
+            </div>
         </div>
     );
 };

@@ -14,6 +14,7 @@ const Home: FC<HomeProps> = () => (
                 <NavbarLink className="nav-link" to="/products">Products</NavbarLink>
             </NavbarLinkContainer>
         </NavbarContainer>
+        <div><h2>Featured products</h2></div>
     </div>
 );
 

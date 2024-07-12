@@ -16,8 +16,7 @@ export const productSlice: Slice<Product[], {
     ],
     reducers: {
         addProduct: (state, action) => {
-            // if(action.payload)
-            //     state.push(action.payload);
+
         },
         // removeProduct: (state, action) => {
         //     state = state.filter((product) => product.id!== action.payload);
