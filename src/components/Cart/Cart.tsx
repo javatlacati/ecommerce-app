@@ -26,6 +26,8 @@ const Cart: FC<CartProps> = () => {
                         <br/>
                         {product && product.image}
                         <br/>
+                        {product && `Quantity: ${quantity}`}
+                        <br />
                         <CleanButton onClick={() => {
                         }}>Add to cart
                         </CleanButton>
