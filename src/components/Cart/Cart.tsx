@@ -24,10 +24,13 @@ const Cart: FC<CartProps> = () => {
                         <br/>
                         {product && product.price}
                         <br/>
-                        {product && product.image}
+                        {product && product.image && <img src={product.image} alt={product.description}/>}
                         <br/>
                         {product && `Quantity: ${quantity}`}
-                        <br />
+                        <br/>
+                        <br/>
+                        <b>Total</b>: {cart.totalToBePaid}
+                        <br/>
                         <CleanButton onClick={() => {
                         }}>Add to cart
                         </CleanButton>

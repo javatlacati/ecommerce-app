@@ -25,7 +25,7 @@ const ProductDetails: FC<ProductDetailsProps> = () => {
             {product && product.image}
             <br/>
             {product && <CleanButton onClick={() => {
-                dispatch(addItem({productId: product.id, quantity: 1}));
+                dispatch(addItem({productId: product.id, quantity: 1, price: product.price}));
                 alert('Product added to cart');
             }}>Add to cart
             </CleanButton>}
