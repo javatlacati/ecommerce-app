@@ -16,8 +16,8 @@ const Cart: FC<CartProps> = () => {
     return (
         <div data-testid="Cart">
             <h2>Selected products:</h2>
-            {cart && Array.from(cart.items.entries()).map(([productId, quantity], index) => {
-                const product = products.find((p) => p.id === productId);
+            {cart && cart.items && Array.from((cart.items as Map<string, number>))?.map(([productId, quantity], index) => {
+                const product = products.find((p) => (p.id + "") === productId);
                 return (
                     <div data-testid="ProductDetails" key={index}>
                         {product && product.name}
