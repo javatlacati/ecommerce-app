@@ -21,17 +21,17 @@ describe('Cart Slice', () => {
         expect(realStore.getState()).toEqual({items: [{productId: 1, quantity: 2}], totalToBePaid: 8});
     });
 
-    test('it should handle removing an item from the cart', () => {
+    test('decreaseItemQuantity_whenItemHasMoreThanOne_shouldDecreaseQuantityAndUpdateTotal', () => {
         // Arrange
         const initialState: CartSliceState = {
             items: [{productId: 1, productQuantity: 2, productPrice: 4}],
-            totalToBePaid: 12
+            totalToBePaid: 8
         };
         const daPayload = {productId: 1, price: 4};
         const realStore = createStore(cartSlice.reducer, initialState);
 
         // Act
-        realStore.dispatch(cartSlice.actions.removeItem(daPayload));
+        realStore.dispatch(cartSlice.actions.decreaseItemQuantity(daPayload));
 
         expect(realStore.getState()).toEqual({
             items: [{productId: 1, productQuantity: 1, productPrice: 4}],

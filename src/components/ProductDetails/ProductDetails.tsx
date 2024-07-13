@@ -13,7 +13,7 @@ const ProductDetails: FC<ProductDetailsProps> = () => {
     const products = useSelector((state: RootState) => state.products);
     const product = products.find((p) => p.id === parseInt(productId || '-1'));
     const dispatch = useDispatch();
-    const {addItem, clearCart, removeItem} = cartSlice.actions;
+    const {addItem, clearCart, decreaseItemQuantity} = cartSlice.actions;
     // Show product images, description, price, and an add-to-cart button
     // Use state to manage the product data
     return (
