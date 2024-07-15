@@ -8,10 +8,11 @@ import {Link} from "react-router-dom";
 
 export interface ProductCardProps {
     product: Product,
-    withLink?: boolean
+    withLink?: boolean,
+    withDescription?: boolean,
 }
 
-const ProductCard: FC<ProductCardProps> = ({product, withLink = false}) => {
+const ProductCard: FC<ProductCardProps> = ({product, withLink = false, withDescription=true}) => {
     const dispatch = useDispatch();
     return (
         <div data-testid="ProductCard" style={{float: "left", margin: '10px'}}>
@@ -21,7 +22,7 @@ const ProductCard: FC<ProductCardProps> = ({product, withLink = false}) => {
             <br/>
             {product.image && <img width={150} alt={product.name} src={process.env.PUBLIC_URL + '/assets/' + product.image}/>}
             <br/>
-            {product.description}
+            {withDescription && product.description}
             <br/>
             <CleanButton onClick={() => {
                 dispatch(addItem({productId: product.id, quantity: 1, price: product.price}));

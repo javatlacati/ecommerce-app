@@ -41,7 +41,7 @@ const ProductListing: FC<ProductListingProps> = () => {
             </div>
             {filteredProducts && filteredProducts.map((product) => {
                 return (
-                    <ProductCard key={product.id} product={product} withLink={true}/>
+                    <ProductCard key={product.id} product={product} withLink={true} withDescription={false}/>
                 )
             })}
         </div>
