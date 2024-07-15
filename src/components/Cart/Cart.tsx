@@ -2,6 +2,7 @@ import React, {FC} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../redux/store";
 import {CleanButton} from "../AppStyle";
+import {removeItem} from "../../redux/cartSlice";
 
 interface CartProps {
 }
@@ -32,6 +33,7 @@ const Cart: FC<CartProps> = () => {
                         <b>Subtotal</b>: ${product && (product.price * cartProduct.productQuantity)}
                         <br/>
                         <CleanButton onClick={() => {
+                            dispatch(removeItem({productId: cartProduct.productId, price: cartProduct.productPrice}))
                         }}>Quitar de la carta
                         </CleanButton>
                     </div>
