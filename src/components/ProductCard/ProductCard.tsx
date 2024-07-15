@@ -14,12 +14,12 @@ export interface ProductCardProps {
 const ProductCard: FC<ProductCardProps> = ({product, withLink = false}) => {
     const dispatch = useDispatch();
     return (
-        <div data-testid="ProductCard" style={{float: "left", margin:'10px'}}>
+        <div data-testid="ProductCard" style={{float: "left", margin: '10px'}}>
             {withLink ? <Link to={'/products/' + product.id}>{product.name}</Link> : product.name}
             <br/>
             {product.price}
             <br/>
-            {product.image}
+            {product.image && <img width={150} alt={product.name} src={process.env.PUBLIC_URL + '/assets/' + product.image}/>}
             <br/>
             {product.description}
             <br/>

@@ -8,16 +8,30 @@ export const productSlice: Slice<Product[], {
     initialState: [
         {
             id: 1,
-            name: 'Product 1',
+            name: 'Gorra café',
             price: 10.99,
-            image: '',
+            image: 'FOTOSURBAN-28.JPG',
             description: 'Description 1',
         },
         {
             id: 2,
-            name: 'Product 2',
+            name: 'Gorra rosa',
             price: 7.24,
-            image: '',
+            image: 'FOTOSURBAN-29.JPG',
+            description: 'Description 2',
+        },
+        {
+            id: 3,
+            name: 'Gorra negra logo gris',
+            price: 7.24,
+            image: 'FOTOSURBAN-31.JPG',
+            description: 'Description 2',
+        },
+        {
+            id: 4,
+            name: 'Gorra negra logo rojo',
+            price: 7.24,
+            image: 'FOTOSURBAN-34.JPG',
             description: 'Description 2',
         }
     ],
