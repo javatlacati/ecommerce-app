@@ -12,7 +12,6 @@ const Cart: FC<CartProps> = () => {
     // Show the total price of the items in the cart
     const cart = useSelector((state: RootState) => state.cart);
     const products = useSelector((state: RootState) => state.products);
-    let [totalPrice, setTotalPrice] = React.useState(0);
     const dispatch = useDispatch();
     return (
         <div data-testid="Cart">
@@ -23,14 +22,14 @@ const Cart: FC<CartProps> = () => {
                     <div data-testid="ProductDetails" key={index}>
                         {product && product.name}
                         <br/>
-                        {product && product.price}
+                        {product && `$${product.price}`}
                         <br/>
                         {product && product.image && <img src={product.image} alt={product.description}/>}
                         <br/>
                         {product && `Quantity: ${cartProduct.productQuantity}`}
                         <br/>
                         <br/>
-                        <b>Subtotal</b>: {cart.totalToBePaid}
+                        <b>Subtotal</b>: ${product && (product.price * cartProduct.productQuantity)}
                         <br/>
                         <CleanButton onClick={() => {
                         }}>Quitar de la carta
@@ -39,7 +38,7 @@ const Cart: FC<CartProps> = () => {
                 );
             })}
             <div>
-                Total: {totalPrice}
+                <b>Total:</b> ${cart.totalToBePaid}
             </div>
         </div>
     );

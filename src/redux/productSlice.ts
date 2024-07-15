@@ -12,6 +12,13 @@ export const productSlice: Slice<Product[], {
             price: 10.99,
             image: '',
             description: 'Description 1',
+        },
+        {
+            id: 2,
+            name: 'Product 2',
+            price: 7.24,
+            image: '',
+            description: 'Description 2',
         }
     ],
     reducers: {
