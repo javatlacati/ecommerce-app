@@ -1,8 +1,8 @@
-import React, {FC} from 'react';
-import {useDispatch, useSelector} from "react-redux";
+import React, {FC, useState} from 'react';
+import {useSelector} from "react-redux";
 import {RootState} from "../../redux/store";
-import {Link} from "react-router-dom";
 import HeaderMenu from "../HeaderMenu/HeaderMenu.lazy";
+import ProductCard from "../ProductCard/ProductCard.lazy";
 
 
 interface ProductListingProps {
@@ -10,18 +10,16 @@ interface ProductListingProps {
 
 const ProductListing: FC<ProductListingProps> = () => {
     const products = useSelector((state: RootState) => state.products);
-    const dispatch = useDispatch();
-    // Use an array of product objects to dynamically render product cards.
-    // Each product card should display the product name, image, price, and a link to the product details
-    // Use state and props to manage and display the products
+    const [filteredProducts, setFilteredProducts] = useState(products);
     // Add filters and sorting options
     return (
         <div data-testid="ProductListing">
             <HeaderMenu/>
-            Product Catalog
-            {products && products.map((product) => {
+            <h2>Product Catalog</h2>
+            {filteredProducts && filteredProducts.map((product) => {
                 return (
-                    <div key={product.id}><Link to={'/products/' + product.id}>{product.name}</Link></div>
+                    // <div key={product.id}><Link to={'/products/' + product.id}>{product.name}</Link></div>
+                    <ProductCard key={product.id} product={product} withLink={true}/>
                 )
             })}
         </div>
