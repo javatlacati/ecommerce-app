@@ -10,7 +10,6 @@ describe('Cart Slice', () => {
         const daPayload = {productId: 1, quantity: 2, price: 4};
 
         const addToCart = cartSlice.actions.addItem;
-        //const dispatch = useDispatch();
 
         const realStore = createStore(cartSlice.reducer, initialState);
 
@@ -18,7 +17,53 @@ describe('Cart Slice', () => {
         realStore.dispatch(addToCart(daPayload));
 
         // Assert
-        expect(realStore.getState()).toEqual({items: [{productId: 1, quantity: 2}], totalToBePaid: 8});
+        expect(realStore.getState()).toEqual({
+            items: [{productId: 1, productQuantity: 2, productPrice: 4}],
+            totalToBePaid: 8
+        });
+    });
+
+    test('it should handle adding an item twice to the cart', () => {
+        // Arrange
+        const initialState: CartSliceState = {items: [], totalToBePaid: 0};
+        const daPayload = {productId: 1, quantity: 2, price: 4};
+
+        const addToCart = cartSlice.actions.addItem;
+        //const dispatch = useDispatch();
+
+        const realStore = createStore(cartSlice.reducer, initialState);
+
+        // Act
+        realStore.dispatch(addToCart(daPayload));
+        realStore.dispatch(addToCart(daPayload));
+
+        // Assert
+        expect(realStore.getState()).toEqual({
+            items: [{productId: 1, productQuantity: 4, productPrice: 4}],
+            totalToBePaid: 16
+        });
+    });
+
+    test('it should handle adding an item 3 times to the cart', () => {
+        // Arrange
+        const initialState: CartSliceState = {items: [], totalToBePaid: 0};
+        const daPayload = {productId: 1, quantity: 2, price: 4};
+
+        const addToCart = cartSlice.actions.addItem;
+        //const dispatch = useDispatch();
+
+        const realStore = createStore(cartSlice.reducer, initialState);
+
+        // Act
+        realStore.dispatch(addToCart(daPayload));
+        realStore.dispatch(addToCart(daPayload));
+        realStore.dispatch(addToCart(daPayload));
+
+        // Assert
+        expect(realStore.getState()).toEqual({
+            items: [{productId: 1, productQuantity: 6, productPrice: 4}],
+            totalToBePaid: 24
+        });
     });
 
     test('decreaseItemQuantity_whenItemHasMoreThanOne_shouldDecreaseQuantityAndUpdateTotal', () => {

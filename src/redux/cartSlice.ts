@@ -55,7 +55,7 @@ let updateItemQuantityByIndexFunction = (state: CartSliceState, action: {
         productPrice: price
     }
     state.items = state.items.map((item, i) => i === index ? newProduct : item);
-    state.totalToBePaid -= newQuantity * price;
+    state.totalToBePaid = newQuantity * price;
 };
 
 export const cartSlice = createSlice({
