@@ -4,7 +4,7 @@ import {RootState} from "../../redux/store";
 import {CleanButton} from "../AppStyle";
 import {CartProduct, removeItem} from "../../redux/cartSlice";
 import {Product} from "../../models/Product";
-import {Button} from "react-query/types/devtools/styledComponents";
+import HeaderMenu from "../HeaderMenu/HeaderMenu.lazy";
 
 interface CartProps {
 }
@@ -38,6 +38,7 @@ const Cart: FC<CartProps> = () => {
 
     return (
         <div data-testid="Cart">
+            <HeaderMenu/>
             <h2>Selected products:</h2>
             {cart && cart.items && cart.items.map((cartProduct, index) => {
                 const product = products.find((p) => p.id === cartProduct.productId);

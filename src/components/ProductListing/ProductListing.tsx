@@ -2,6 +2,7 @@ import React, {FC} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../redux/store";
 import {Link} from "react-router-dom";
+import HeaderMenu from "../HeaderMenu/HeaderMenu.lazy";
 
 
 interface ProductListingProps {
@@ -16,7 +17,8 @@ const ProductListing: FC<ProductListingProps> = () => {
     // Add filters and sorting options
     return (
         <div data-testid="ProductListing">
-            ProductListing Component
+            <HeaderMenu/>
+            Product Catalog
             {products && products.map((product) => {
                 return (<div key={product.id}><Link to={'/products/' + product.id}>{product.name}</Link></div>)
             })}
