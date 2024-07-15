@@ -18,7 +18,6 @@ const ProductListing: FC<ProductListingProps> = () => {
             <h2>Product Catalog</h2>
             {filteredProducts && filteredProducts.map((product) => {
                 return (
-                    // <div key={product.id}><Link to={'/products/' + product.id}>{product.name}</Link></div>
                     <ProductCard key={product.id} product={product} withLink={true}/>
                 )
             })}
