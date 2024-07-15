@@ -11,7 +11,11 @@ export interface CartSliceState {
     items: CartProduct[];
 }
 
-let addItemFunction = (state: CartSliceState, action: PayloadAction<{ productId: number, quantity: number, price: number }>) => {
+let addItemFunction = (state: CartSliceState, action: PayloadAction<{
+    productId: number,
+    quantity: number,
+    price: number
+}>) => {
     const productId = action.payload.productId;
     const quantity = action.payload.quantity || 1;
     let price = action.payload.price;
@@ -59,6 +63,15 @@ let updateItemQuantityByIndexFunction = (state: CartSliceState, action: {
 let calculateTotal = (state: CartSliceState) => {
     state.totalToBePaid = state.items.reduce((sum, item) => sum + item.productQuantity * item.productPrice, 0);
 };
+let removeItem1 = (state: CartSliceState, action: { payload: { productId: number, price: number } }): void => {
+    let possibleItem = state.items.find((item) =>
+        item.productId === action.payload.productId
+    );
+    if (possibleItem) {
+        state.items = state.items.filter((item) => item.productId !== action.payload.productId);
+        calculateTotal(state)
+    }
+};
 export const cartSlice = createSlice({
     name: 'cart',
     initialState: {
@@ -72,15 +85,7 @@ export const cartSlice = createSlice({
             state.items = [];
             state.totalToBePaid = 0;
         },
-        removeItem: (state: CartSliceState, action: { payload: { productId: number, price: number } }): void => {
-            let possibleItem = state.items.find((item) =>
-                item.productId === action.payload.productId
-            );
-            if (possibleItem) {
-                state.items = state.items.filter((item) => item.productId !== action.payload.productId);
-                calculateTotal(state)
-            }
-        },
+        removeItem: removeItem1,
         decreaseItemQuantity: (state: CartSliceState, action: { payload: { productId: number, price: number } }) => {
             let possibleItem = state.items.find((item) =>
                 item.productId === action.payload.productId
@@ -97,14 +102,31 @@ export const cartSlice = createSlice({
                         }
                     });
                 } else {
-                    // removeItem(state, {payload: {productId: action.payload.productId, price: action.payload.price}});
+                    removeItem1(state, {payload: {productId: action.payload.productId, price: action.payload.price}});
                 }
+            }
+        },
+        increaseItemQuantity: (state: CartSliceState, action: {
+            payload: { productId: number, price: number, quantity: number }
+        }) => {
+            let possibleItem = state.items.find((item) =>
+                item.productId === action.payload.productId
+            );
+            if (possibleItem) {
+                updateItemQuantityByIndexFunction(state, {
+                    payload: {
+                        productId: action.payload.productId,
+                        newQuantity: possibleItem.productQuantity + 1,
+                        price: action.payload.price,
+                        index: state.items.indexOf(possibleItem)
+                    }
+                });
             }
         },
         calculateTotal,
     }
 });
 
-export const {addItem, removeItem, decreaseItemQuantity, clearCart} = cartSlice.actions;
+export const {addItem, removeItem, increaseItemQuantity, decreaseItemQuantity, clearCart} = cartSlice.actions;
 
 export default cartSlice.reducer;

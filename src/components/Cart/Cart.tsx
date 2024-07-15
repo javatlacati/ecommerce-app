@@ -2,7 +2,7 @@ import React, {FC} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../redux/store";
 import {CleanButton} from "../AppStyle";
-import {CartProduct, removeItem} from "../../redux/cartSlice";
+import {CartProduct, decreaseItemQuantity, increaseItemQuantity, removeItem} from "../../redux/cartSlice";
 import {Product} from "../../models/Product";
 import HeaderMenu from "../HeaderMenu/HeaderMenu.lazy";
 
@@ -10,7 +10,6 @@ interface CartProps {
 }
 
 const Cart: FC<CartProps> = () => {
-    // Allow users to update the quantity of each item or remove items from the cart
     const cart = useSelector((state: RootState) => state.cart);
     const products = useSelector((state: RootState) => state.products);
     const dispatch = useDispatch();
@@ -22,9 +21,16 @@ const Cart: FC<CartProps> = () => {
         {product.image && <><img src={product.image} alt={product.description}/>
             <br/></>}
         Quantity:&nbsp;
-        <button disabled={cartProduct.productQuantity < 1}>-</button>
+        <button disabled={cartProduct.productQuantity < 1}
+                onClick={() => dispatch(decreaseItemQuantity({productId: product.id, price: product.price}))}>-
+        </button>
         &nbsp;{cartProduct.productQuantity}&nbsp;
-        <button>+</button>
+        <button onClick={() => dispatch(increaseItemQuantity({
+            productId: product.id,
+            price: product.price,
+            quantity: cartProduct.productQuantity
+        }))}>+
+        </button>
         <br/>
         <br/>
         <b>Subtotal</b>: ${(product.price * cartProduct.productQuantity)}
