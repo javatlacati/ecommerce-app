@@ -1,4 +1,4 @@
-import {createSlice, PayloadAction, Slice, SliceSelectors} from "@reduxjs/toolkit";
+import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 
 export interface CartProduct {
     productId: number;
@@ -11,9 +11,7 @@ export interface CartSliceState {
     items: CartProduct[];
 }
 
-let addItemFunction = (state: CartSliceState, action: {
-    payload: { productId: number, quantity: number, price: number }
-}) => {
+let addItemFunction = (state: CartSliceState, action: PayloadAction<{ productId: number, quantity: number, price: number }>) => {
     const productId = action.payload.productId;
     const quantity = action.payload.quantity || 1;
     let price = action.payload.price;
@@ -55,9 +53,12 @@ let updateItemQuantityByIndexFunction = (state: CartSliceState, action: {
         productPrice: price
     }
     state.items = state.items.map((item, i) => i === index ? newProduct : item);
-    state.totalToBePaid = newQuantity * price;
+    calculateTotal(state)
 };
 
+let calculateTotal = (state: CartSliceState) => {
+    state.totalToBePaid = state.items.reduce((sum, item) => sum + item.productQuantity * item.productPrice, 0);
+};
 export const cartSlice = createSlice({
     name: 'cart',
     initialState: {
@@ -77,7 +78,7 @@ export const cartSlice = createSlice({
             );
             if (possibleItem) {
                 state.items = state.items.filter((item) => item.productId !== action.payload.productId);
-                state.totalToBePaid -= possibleItem.productQuantity * possibleItem.productPrice;
+                calculateTotal(state)
             }
         },
         decreaseItemQuantity: (state: CartSliceState, action: { payload: { productId: number, price: number } }) => {
@@ -100,8 +101,7 @@ export const cartSlice = createSlice({
                 }
             }
         },
-
-
+        calculateTotal,
     }
 });
 
