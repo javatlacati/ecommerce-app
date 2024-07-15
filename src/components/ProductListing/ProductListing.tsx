@@ -20,7 +20,9 @@ const ProductListing: FC<ProductListingProps> = () => {
             <HeaderMenu/>
             Product Catalog
             {products && products.map((product) => {
-                return (<div key={product.id}><Link to={'/products/' + product.id}>{product.name}</Link></div>)
+                return (
+                    <div key={product.id}><Link to={'/products/' + product.id}>{product.name}</Link></div>
+                )
             })}
         </div>
     );
