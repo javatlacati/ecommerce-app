@@ -2,7 +2,9 @@ import React, {FC} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../redux/store";
 import {CleanButton} from "../AppStyle";
-import {removeItem} from "../../redux/cartSlice";
+import {CartProduct, removeItem} from "../../redux/cartSlice";
+import {Product} from "../../models/Product";
+import {Button} from "react-query/types/devtools/styledComponents";
 
 interface CartProps {
 }
@@ -14,6 +16,26 @@ const Cart: FC<CartProps> = () => {
     const cart = useSelector((state: RootState) => state.cart);
     const products = useSelector((state: RootState) => state.products);
     const dispatch = useDispatch();
+
+    let productListTemplate = (product: Product, cartProduct: CartProduct) => (<>{product.name}
+        <br/>
+        ${product.price}
+        <br/>
+        {product.image && <><img src={product.image} alt={product.description}/>
+            <br/></>}
+        Quantity:&nbsp;
+        <button disabled={cartProduct.productQuantity < 1}>-</button>
+        &nbsp;{cartProduct.productQuantity}&nbsp;
+        <button>+</button>
+        <br/>
+        <br/>
+        <b>Subtotal</b>: ${(product.price * cartProduct.productQuantity)}
+        <br/>
+        <CleanButton onClick={() => {
+            dispatch(removeItem({productId: cartProduct.productId, price: cartProduct.productPrice}))
+        }}>Quitar de la carta
+        </CleanButton></>);
+
     return (
         <div data-testid="Cart">
             <h2>Selected products:</h2>
@@ -21,24 +43,11 @@ const Cart: FC<CartProps> = () => {
                 const product = products.find((p) => p.id === cartProduct.productId);
                 return (
                     <div data-testid="ProductDetails" key={index}>
-                        {product && product.name}
-                        <br/>
-                        {product && `$${product.price}`}
-                        <br/>
-                        {product && product.image && <img src={product.image} alt={product.description}/>}
-                        <br/>
-                        {product && `Quantity: ${cartProduct.productQuantity}`}
-                        <br/>
-                        <br/>
-                        <b>Subtotal</b>: ${product && (product.price * cartProduct.productQuantity)}
-                        <br/>
-                        <CleanButton onClick={() => {
-                            dispatch(removeItem({productId: cartProduct.productId, price: cartProduct.productPrice}))
-                        }}>Quitar de la carta
-                        </CleanButton>
+                        {product && productListTemplate(product, cartProduct)}
                     </div>
                 );
             })}
+            <hr/>
             <div>
                 <b>Total:</b> ${cart.totalToBePaid}
             </div>
