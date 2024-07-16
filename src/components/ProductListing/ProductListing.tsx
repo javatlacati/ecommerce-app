@@ -1,16 +1,32 @@
-import React, {FC, useEffect, useState} from 'react';
-import {useSelector} from "react-redux";
+import React, {Dispatch, FC, useEffect, useState} from 'react';
+import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../redux/store";
 import HeaderMenu from "../HeaderMenu/HeaderMenu.lazy";
 import ProductCard from "../ProductCard/ProductCard.lazy";
 import {ProductFilter} from "../../util/ProductFilter";
 import {PriceRangeSpecification} from "../../util/specifications/PriceRangeSpecification";
+import {useQuery} from "@tanstack/react-query";
+import {fetchProducts} from "../../util/http";
+import {Product} from "../../models/Product";
+import {addProduct} from "../../redux/productSlice";
+import {UnknownAction} from "@reduxjs/toolkit";
 
 
 interface ProductListingProps {
 }
 
-const useProductFilter = (products: any[], minPrice: number, maxPrice: number) => {
+
+const useProductFilter = (products: any[], minPrice: number, maxPrice: number, dispatch: Dispatch<UnknownAction>) => {
+    const {data, isLoading} = useQuery({
+            queryKey: ['products'],
+            refetchInterval: 100000, // refetch every 10 seconds
+            queryFn: () => fetchProducts().then((response) => {
+                let responseProducts: Product[] = response['products'] as Product[];
+                alert(JSON.stringify(responseProducts));
+                responseProducts.forEach((product: Product) => dispatch(addProduct(product)));
+            })
+        }
+    );
     const filter = new ProductFilter(new PriceRangeSpecification(minPrice, maxPrice));
     const [filteredProducts, setFilteredProducts] = useState(filter.filter(products));
 
@@ -22,10 +38,11 @@ const useProductFilter = (products: any[], minPrice: number, maxPrice: number) =
 };
 
 const ProductListing: FC<ProductListingProps> = () => {
-    const products = useSelector((state: RootState) => state.products);
+    const dispatch = useDispatch();
+    const products = useSelector((state: RootState) => state.products.products);
     const [minPrice, setMinPrice] = useState(0);
     const [maxPrice, setMaxPrice] = useState(5000);
-    const filteredProducts = useProductFilter(products, minPrice, maxPrice);
+    const filteredProducts = useProductFilter(products, minPrice, maxPrice, dispatch);
     // Add filters and sorting options
     return (
         <div data-testid="ProductListing">

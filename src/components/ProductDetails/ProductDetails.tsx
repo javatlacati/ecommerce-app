@@ -10,7 +10,7 @@ interface ProductDetailsProps {
 
 const ProductDetails: FC<ProductDetailsProps> = () => {
     const {productId} = useParams();
-    const products = useSelector((state: RootState) => state.products);
+    const products = useSelector((state: RootState) => state.products.products);
     const product = products.find((p) => p.id === parseInt(productId || '-1'));
 
     return (

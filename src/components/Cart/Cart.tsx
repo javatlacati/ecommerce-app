@@ -11,7 +11,7 @@ interface CartProps {
 
 const Cart: FC<CartProps> = () => {
     const cart = useSelector((state: RootState) => state.cart);
-    const products = useSelector((state: RootState) => state.products);
+    const products = useSelector((state: RootState) => state.products.products);
     const dispatch = useDispatch();
 
     let productListTemplate = (product: Product, cartProduct: CartProduct) => (
