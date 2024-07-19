@@ -19,11 +19,11 @@ interface ProductListingProps {
 const useProductFilter = (products: any[], minPrice: number, maxPrice: number, dispatch: Dispatch<UnknownAction>) => {
     const {data, isLoading} = useQuery({
             queryKey: ['products'],
-            refetchInterval: 100000, // refetch every 10 seconds
+            refetchInterval: 1000000, // refetch every seconds
             queryFn: () => fetchProducts().then((response) => {
                 let responseProducts: Product[] = response['products'] as Product[];
-                alert(JSON.stringify(responseProducts));
-                responseProducts.forEach((product: Product) => dispatch(addProduct(product)));
+
+                //responseProducts.forEach((product: Product) => dispatch(addProduct(product)));
             })
         }
     );

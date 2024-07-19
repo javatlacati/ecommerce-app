@@ -1,7 +1,7 @@
 import {Product} from "../models/Product";
 
 export async function fetchProducts() {
-    const response:Response = await fetch('https://dummyjson.com/products', {
+    const response:Response = await fetch('http://localhost:9090/products', {
         method: "GET",
         headers: {
             'Content-Type': 'application/json'
