@@ -3,47 +3,45 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../redux/store";
 import HeaderMenu from "../HeaderMenu/HeaderMenu.lazy";
 import ProductCard from "../ProductCard/ProductCard.lazy";
-import {ProductFilter} from "../../util/ProductFilter";
-import {PriceRangeSpecification} from "../../util/specifications/PriceRangeSpecification";
-import {useQuery} from "@tanstack/react-query";
 import {fetchProducts} from "../../util/http";
 import {Product} from "../../models/Product";
-import {addProduct} from "../../redux/productSlice";
-import {UnknownAction} from "@reduxjs/toolkit";
+import {addProduct, setProducts} from "../../redux/productSlice";
+import {ProductSorting, SortOrder} from "../../util/ProductSorting";
+import {PriceRangeSpecification} from "../../util/specifications/PriceRangeSpecification";
+import {ProductFilter} from "../../util/ProductFilter";
 
 
 interface ProductListingProps {
 }
-
-
-const useProductFilter = (products: any[], minPrice: number, maxPrice: number, dispatch: Dispatch<UnknownAction>) => {
-    const {data, isLoading} = useQuery({
-            queryKey: ['products'],
-            refetchInterval: 1000000, // refetch every seconds
-            queryFn: () => fetchProducts().then((response) => {
-                let responseProducts: Product[] = response['products'] as Product[];
-
-                //responseProducts.forEach((product: Product) => dispatch(addProduct(product)));
-            })
-        }
-    );
-    const filter = new ProductFilter(new PriceRangeSpecification(minPrice, maxPrice));
-    const [filteredProducts, setFilteredProducts] = useState(filter.filter(products));
-
-    useEffect(() => {
-        setFilteredProducts(filter.filter(products));
-    }, [products, minPrice, maxPrice]);
-
-    return filteredProducts;
-};
 
 const ProductListing: FC<ProductListingProps> = () => {
     const dispatch = useDispatch();
     const products = useSelector((state: RootState) => state.products.products);
     const [minPrice, setMinPrice] = useState(0);
     const [maxPrice, setMaxPrice] = useState(5000);
-    const filteredProducts = useProductFilter(products, minPrice, maxPrice, dispatch);
-    // Add filters and sorting options
+    const [sortField, setSortField] = useState('name');
+    const [sortOrder, setSortOrder] = useState(SortOrder.ASCENDING);
+    const filter = new ProductFilter(new PriceRangeSpecification(minPrice, maxPrice));
+
+    const [filteredProducts, setFilteredProducts] = useState<Product[]>(products);
+    const sortProducts = (theProductsFiltered: Product[]) => {
+        const productSorting = new ProductSorting<Product>();
+        setFilteredProducts(productSorting.sort(theProductsFiltered, sortField, sortOrder));
+    };
+    const filterProducts = () => {
+        sortProducts(filter.filter(products));
+    }
+
+    useEffect(() => {
+        fetchProducts().then((response) => {
+            const responseProducts: Product[] = response['products'] as Product[];
+            dispatch(setProducts(responseProducts));
+            //responseProducts.forEach((product: Product) => dispatch(addProduct(product)));
+            filterProducts()
+        });
+    }, []);
+
+
     return (
         <div data-testid="ProductListing">
             <HeaderMenu/>
@@ -55,6 +53,18 @@ const ProductListing: FC<ProductListingProps> = () => {
                 <label htmlFor="maxPrice">Precio máximo &nbsp;</label>
                 <input id="maxPrice" value={maxPrice} type="number"
                        onChange={(newValue) => setMaxPrice(parseInt(newValue.target.value))}/>&nbsp;
+                <label htmlFor="sortField">Ordenar por &nbsp;</label>
+                <select id="sortField" value={sortField} onChange={(e) => setSortField(e.target.value)}>
+                    <option value="name">Nombre</option>
+                    <option value="price">Precio</option>
+                </select>
+                <label htmlFor="sortOrder">Orden &nbsp;</label>
+                <select id="sortOrder" value={sortOrder}
+                        onChange={(e) => setSortOrder(e.target.value === 'ASCENDING' ? SortOrder.ASCENDING : SortOrder.DESCENDING)}>
+                    <option value="ASCENDING">Ascendente</option>
+                    <option value="DESCENDING">Descendente</option>
+                </select>
+                <button onClick={filterProducts}>Ordenar y filtrar</button>
             </div>
             {filteredProducts && filteredProducts.map((product) => {
                 return (

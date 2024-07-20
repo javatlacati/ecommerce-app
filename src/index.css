@@ -6,3 +6,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+.product-card:hover{
+  border: 1px dashed darkgoldenrod;
+}

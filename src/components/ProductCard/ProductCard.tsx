@@ -15,7 +15,7 @@ export interface ProductCardProps {
 const ProductCard: FC<ProductCardProps> = ({product, withLink = false, withDescription=true}) => {
     const dispatch = useDispatch();
     return (
-        <div data-testid="ProductCard" style={{float: "left", margin: '10px'}}>
+        <div data-testid="ProductCard" className="product-card" style={{float: "left", margin: '10px'}}>
             {withLink ? <Link to={'/products/' + product.id}>{product.name}</Link> : product.name}
             <br/>
             {product.price}
