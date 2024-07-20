@@ -5,7 +5,7 @@ import HeaderMenu from "../HeaderMenu/HeaderMenu.lazy";
 import ProductCard from "../ProductCard/ProductCard.lazy";
 import {fetchProducts} from "../../util/http";
 import {Product} from "../../models/Product";
-import {addProduct, setProducts} from "../../redux/productSlice";
+import {setProducts} from "../../redux/productSlice";
 import {ProductSorting, SortOrder} from "../../util/ProductSorting";
 import {PriceRangeSpecification} from "../../util/specifications/PriceRangeSpecification";
 import {ProductFilter} from "../../util/ProductFilter";
@@ -33,11 +33,13 @@ const ProductListing: FC<ProductListingProps> = () => {
     }
 
     useEffect(() => {
+        filterProducts()
+    }, [products]);
+
+    useEffect(() => {
         fetchProducts().then((response) => {
             const responseProducts: Product[] = response['products'] as Product[];
             dispatch(setProducts(responseProducts));
-            //responseProducts.forEach((product: Product) => dispatch(addProduct(product)));
-            filterProducts()
         });
     }, []);
 
@@ -59,7 +61,7 @@ const ProductListing: FC<ProductListingProps> = () => {
                     <option value="price">Precio</option>
                 </select>
                 <label htmlFor="sortOrder">Orden &nbsp;</label>
-                <select id="sortOrder" value={sortOrder}
+                <select id="sortOrder" value={sortOrder == SortOrder.ASCENDING ? 'ASCENDING' : 'DESCENDING'}
                         onChange={(e) => setSortOrder(e.target.value === 'ASCENDING' ? SortOrder.ASCENDING : SortOrder.DESCENDING)}>
                     <option value="ASCENDING">Ascendente</option>
                     <option value="DESCENDING">Descendente</option>
